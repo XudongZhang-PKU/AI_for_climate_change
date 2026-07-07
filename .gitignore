@@ -1,0 +1,50 @@
+# Data and generated experiment outputs
+data/
+fig2_data_prepare_*/
+output/
+logs/
+logs_figs/
+figs/
+figs_nature/
+sensitivity/logs/
+sensitivity/results/*.csv
+sensitivity/results/*.tsv
+
+# Model checkpoints and generated arrays
+*.ckpt
+*.pt
+*.pth
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+
+# Python/cache/runtime
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Local environments and editor files
+.venv/
+venv/
+env/
+.env
+.DS_Store
+.vscode/
+.idea/
+
+# Temporary logs
+*.log
+*.out
+*.err
+
+# Symlinked data directory and local backups
+data
+*.bak_sensitivity_*
+
+# Local scratch notebooks
+*.ipynb

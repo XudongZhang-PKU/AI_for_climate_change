@@ -270,7 +270,8 @@ def main(params: dict):
     config.save_dir = f"fig2_data_prepare_{config.ablation}_{config.split_seed}{suffix}"
     config.results_csv = os.path.join(config.save_dir, "训练记录.csv")
 
-    config.trial_name = '+'.join([f"{v}" for k, v in params.items()])
+    # Keep Slurm experiment logs on a short stable path; full hyperparameters are recorded in results_csv.
+    config.trial_name = str(params.get("exp_tag") or params.get("save_suffix") or f"{config.ablation}_{config.split_seed}")
     config.log_path = f"{config.PATH_LOG}/{config.trial_name}.log"
 
     # pprint(config)

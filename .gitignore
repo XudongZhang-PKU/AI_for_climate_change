@@ -48,3 +48,14 @@ data
 
 # Local scratch notebooks
 *.ipynb
+
+# Local inputs, model weights and generated examples
+assets/
+examples/
+reference_results/
+results/
+outputs/
+.verify-venv/
+
+# Source preprocessing notebook
+!preprocessing/prepare_spm.ipynb

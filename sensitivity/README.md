@@ -1,3 +1,5 @@
+> Historical cluster job configurations. See the [usage guide](../docs/usage.md) for the current fixed-checkpoint evaluation entrypoints; the original cluster paths are retained for provenance.
+
 # CO2 sensitivity experiments
 
 First round: data scaling sensitivity for the paper.

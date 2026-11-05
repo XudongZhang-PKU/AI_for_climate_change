@@ -1,0 +1,9 @@
+# Python dependencies for training, inference and evaluation.
+numpy==2.4.4
+pandas==3.0.3
+scipy==1.17.1
+matplotlib==3.10.8
+scikit-learn==1.8.0
+torch==2.11.0
+easydict==1.13
+tqdm==4.67.1

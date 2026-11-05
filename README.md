@@ -1,26 +1,53 @@
-# CO2 physics-guided diffusion experiments
+# DeepIAM
 
-Codebase for the CO2 climate transition pathway generation experiments, including the sensitivity experiment pipeline used for the manuscript.
+DeepIAM is a constraint-guided spatiotemporal graph diffusion model for generating climate mitigation pathways. This repository includes data preprocessing, model training, sampling, and evaluation code.
 
-## Sensitivity experiments
+![DeepIAM architecture](docs/images/architecture.png)
 
-The core sensitivity jobs are stored in `sensitivity/jobs_core/`.
-
-Submit all independent GPU jobs from the Slurm login node:
+## Installation and demo (Linux)
 
 ```bash
-cd /lustre/home/2501111516/work/碳排放/co2-0204-best-sensitivity
-bash sensitivity/submit_core_sensitivity_all.sh
+git clone --branch nature-submission https://github.com/XudongZhang-PKU/AI_for_climate_change.git
+cd AI_for_climate_change
+
+conda create -n deepiam python=3.14 -y
+conda activate deepiam
+pip install -r requirements.txt
+
+# Set your data and checkpoint paths; use the seeds associated with the checkpoint
+python scripts/run_model.py demo \
+  --data-root /path/to/SPM \
+  --checkpoint /path/to/model.ckpt \
+  --checkpoint-split-seed 2026 \
+  --normalization-seed 2026 \
+  --seed 2026 --split-seed 2026 \
+  --device cuda \
+  --output-dir outputs/demo
 ```
 
-Each job requests one `GPU80G` GPU with high QoS. Results can be collected after completion with:
+## Training
 
 ```bash
-python3 sensitivity/scripts/collect_core_sensitivity_results.py
+python scripts/run_model.py train \
+  --data-root /path/to/SPM \
+  --device cuda --epochs 300 \
+  --seed 2026 --split-seed 2026 \
+  --output-dir outputs/train
 ```
 
-The generated summary is written to `sensitivity/results/core_sensitivity_summary.csv` and is intentionally ignored by git.
+## Repository structure
 
-## Notes
+| Directory | Contents |
+|---|---|
+| `model_files/` | Model architecture and data loading |
+| `scripts/` | Training and sampling entry points |
+| `utils/` | Constraints, evaluation, and output export |
+| `analysis/` | Distributional validation, ablations, and sensitivity analysis |
+| `preprocessing/`, `plotting/` | Data preprocessing and plotting |
+| `legacy/`, `sensitivity/` | Historical scripts and cluster jobs |
 
-Large data, checkpoints, generated figures, logs and experiment result folders are excluded from version control through `.gitignore`.
+See the [usage guide](docs/usage.md) for input formats and evaluation commands.
+
+## License
+
+[MIT](LICENSE)

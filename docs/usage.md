@@ -2,6 +2,8 @@
 
 ## Input data
 
+See the [data guide](data.md) for the AR6 download link, source version, and processed-input checksums. Data files are supplied separately from this Git checkout.
+
 Set `--data-root` to a directory containing the following files:
 
 ```text
@@ -13,7 +15,8 @@ SPM/
     ├── dim_Category_encoding.csv
     ├── dim_Model_encoding.csv
     ├── dim_Region_encoding.csv
-    └── dim_Variable_encoding.csv
+    ├── dim_Variable_encoding.csv
+    └── variables48.csv
 ```
 
 `spm.npz` contains `padded: (N, 528, 10, 5)` and `mask: (N, 528)`. The 528 groups represent 11 regions × 48 variables. The time axis spans 2010–2100 at ten-year intervals. The final dimension contains the model, category, region and variable codes, followed by the value. The encoding order must match the model.

@@ -4,10 +4,16 @@ DeepIAM is a constraint-guided spatiotemporal graph diffusion model for generati
 
 ![DeepIAM architecture](docs/images/architecture.png)
 
+## Data
+
+Source data: [AR6 Scenario Explorer and Database](https://iiasa.ac.at/models-tools-data/ar6-scenario-explorer-and-database), version 1.1 ([dataset DOI](https://doi.org/10.5281/zenodo.7197970)).
+
+The processed input dataset contains 1,188 pathways covering 2010–2100, with 48 variables across the world aggregate and ten R10 regions. See the [data guide](docs/data.md) for access, required files, and checksums.
+
 ## Installation and demo (Linux)
 
 ```bash
-git clone --branch nature-submission https://github.com/XudongZhang-PKU/AI_for_climate_change.git
+git clone https://github.com/XudongZhang-PKU/AI_for_climate_change.git
 cd AI_for_climate_change
 
 conda create -n deepiam python=3.14 -y
@@ -50,4 +56,4 @@ See the [usage guide](docs/usage.md) for input formats and evaluation commands.
 
 ## License
 
-[MIT](LICENSE)
+Code: [MIT](LICENSE). AR6 data retain their [source license](https://data.ene.iiasa.ac.at/ar6/static/License/Legal.html).

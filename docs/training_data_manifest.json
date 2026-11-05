@@ -1,0 +1,109 @@
+{
+  "dataset": "DeepIAM processed training inputs",
+  "source": {
+    "title": "AR6 Scenarios Database",
+    "version": "1.1",
+    "doi": "https://doi.org/10.5281/zenodo.7197970",
+    "url": "https://iiasa.ac.at/models-tools-data/ar6-scenario-explorer-and-database",
+    "license_url": "https://data.ene.iiasa.ac.at/ar6/static/License/Legal.html"
+  },
+  "distribution_status": "Prepared locally; public redistribution basis not yet confirmed. Data are not included in the Git tree.",
+  "pathways": 1188,
+  "pathways_with_regional_observations": 842,
+  "model_versions": 41,
+  "categories": 8,
+  "regions": 11,
+  "variables": 48,
+  "years": [
+    2010,
+    2020,
+    2030,
+    2040,
+    2050,
+    2060,
+    2070,
+    2080,
+    2090,
+    2100
+  ],
+  "arrays": {
+    "padded": {
+      "shape": [
+        1188,
+        528,
+        10,
+        5
+      ],
+      "dtype": "float32",
+      "channels": [
+        "model_code",
+        "category_code",
+        "region_code",
+        "variable_code",
+        "value"
+      ]
+    },
+    "mask": {
+      "shape": [
+        1188,
+        528
+      ],
+      "dtype": "uint8",
+      "values": [
+        0,
+        1
+      ]
+    }
+  },
+  "compression": {
+    "method": "Lossless NPZ compression",
+    "original_npz_sha256": "ec8c1f448d5cfdd54e313e3377c1fb7f23fa3ab8d31b642262f7a22f16b13582",
+    "array_payload_sha256": {
+      "padded.npy": "567a332cf196d9929e6db75a7dfeed10d0cd5b7f2e8c9f570994e19308a0740a",
+      "mask.npy": "bd9264a89feb775fe23b68bd2953110435d9ecf22dac0ca3c2c7fa407eda103c"
+    }
+  },
+  "files": [
+    {
+      "path": "spm.npz",
+      "bytes": 19391978,
+      "sha256": "0fe2536d1d1c7c80d09119ec4dcdcaed357cf769dc29cabfeda257bd0c5846a7"
+    },
+    {
+      "path": "region_baseline.csv",
+      "bytes": 51529,
+      "sha256": "34711dad353b9dc2896d066c4ec02dc509fc3135fb2e0569a4a42e742967e7ef"
+    },
+    {
+      "path": "variable_baseline.csv",
+      "bytes": 84898,
+      "sha256": "f53d94a93fe7d500fe342f1414c5ff7de9b64933f6e3b76a9518de26a29aa533"
+    },
+    {
+      "path": "变量编码对应表/dim_Model_encoding.csv",
+      "bytes": 747,
+      "sha256": "2944ed9e6a37cc5e6e0b37c3ed69c965aecb62de4dfaea5b05b21f83b03d50ae"
+    },
+    {
+      "path": "变量编码对应表/dim_Category_encoding.csv",
+      "bytes": 51,
+      "sha256": "1b6e68f9cd25d4fe3d25d096155e0234d2cfc7e7101ab5fa8ee2d673b4f3a8d4"
+    },
+    {
+      "path": "变量编码对应表/dim_Region_encoding.csv",
+      "bytes": 156,
+      "sha256": "ad7bf2eba76f19e6663138e89ac8354c2d05899e86adb220e79f12fdd06eccd1"
+    },
+    {
+      "path": "变量编码对应表/dim_Variable_encoding.csv",
+      "bytes": 1696,
+      "sha256": "295fe6dfe8a8e43a8adbf0c4524cd67af5b156635932b5988752766c542702fb"
+    },
+    {
+      "path": "变量编码对应表/variables48.csv",
+      "bytes": 1950,
+      "sha256": "0415557afb7c9504e564c7789b464422a9725ba1d4687ec16da8acc79c26e44b"
+    }
+  ],
+  "total_bytes": 19533005
+}

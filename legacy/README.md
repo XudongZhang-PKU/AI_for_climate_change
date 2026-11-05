@@ -1,3 +1,3 @@
-# 历史代码
+# Historical code
 
-保留整理前绘图和服务器启动命令，仍按原工程路径编写，仅供历史溯源。当前运行使用仓库README中的可移植入口。
+This directory preserves the plotting scripts and server launch commands from before the reorganization, with their original project paths, for historical reference. Use the portable entrypoints in the repository [README](../README.md) for current runs.

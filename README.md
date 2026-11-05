@@ -1,20 +1,20 @@
 # DeepIAM
 
-约束引导的时空图扩散模型，用于气候减缓路径生成，包含数据预处理、模型训练、采样和评估。
+DeepIAM is a constraint-guided spatiotemporal graph diffusion model for generating climate mitigation pathways. This repository includes data preprocessing, model training, sampling, and evaluation code.
 
-![DeepIAM 模型结构](docs/images/architecture.png)
+![DeepIAM architecture](docs/images/architecture.png)
 
-## 安装与演示（Linux）
+## Installation and demo (Linux)
 
 ```bash
-git clone --branch codex/nature-review-package https://github.com/XudongZhang-PKU/AI_for_climate_change.git
+git clone --branch nature-submission https://github.com/XudongZhang-PKU/AI_for_climate_change.git
 cd AI_for_climate_change
 
 conda create -n deepiam python=3.14 -y
 conda activate deepiam
 pip install -r requirements.txt
 
-# 将数据和权重路径替换为实际位置；种子应与权重对应
+# Set your data and checkpoint paths; use the seeds associated with the checkpoint
 python scripts/run_model.py demo \
   --data-root /path/to/SPM \
   --checkpoint /path/to/model.ckpt \
@@ -25,7 +25,7 @@ python scripts/run_model.py demo \
   --output-dir outputs/demo
 ```
 
-## 训练
+## Training
 
 ```bash
 python scripts/run_model.py train \
@@ -35,19 +35,19 @@ python scripts/run_model.py train \
   --output-dir outputs/train
 ```
 
-## 目录
+## Repository structure
 
-| 目录 | 内容 |
+| Directory | Contents |
 |---|---|
-| `model_files/` | 模型与数据加载 |
-| `scripts/` | 训练、采样入口 |
-| `utils/` | 约束、评估与结果导出 |
-| `analysis/` | 分布验证、消融与敏感性分析 |
-| `preprocessing/`、`plotting/` | 预处理与绘图 |
-| `legacy/`、`sensitivity/` | 历史脚本与集群作业 |
+| `model_files/` | Model architecture and data loading |
+| `scripts/` | Training and sampling entry points |
+| `utils/` | Constraints, evaluation, and output export |
+| `analysis/` | Distributional validation, ablations, and sensitivity analysis |
+| `preprocessing/`, `plotting/` | Data preprocessing and plotting |
+| `legacy/`, `sensitivity/` | Historical scripts and cluster jobs |
 
-数据格式与评估命令见[使用说明](docs/reproduction_zh.md)。
+See the [usage guide](docs/usage.md) for input formats and evaluation commands.
 
-## 许可证
+## License
 
 [MIT](LICENSE)

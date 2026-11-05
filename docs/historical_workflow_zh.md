@@ -1,4 +1,4 @@
-> 历史工程记录，保留原文供溯源。路径和部分指标口径已过时；当前入口见 README 和 reproduction_zh.md。
+> 历史工程记录，保留原文供溯源。路径和部分指标口径已过时；当前入口见 [README](../README.md) 和 [usage.md](usage.md)。
 
 # co2-0204-best 完整工程工作流说明书
 

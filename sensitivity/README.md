@@ -1,4 +1,4 @@
-> 历史集群作业配置。当前固定权重评估入口见 ../docs/reproduction_zh.md；原始集群路径仅供溯源。
+> Historical cluster job configurations. See the [usage guide](../docs/usage.md) for the current fixed-checkpoint evaluation entrypoints; the original cluster paths are retained for provenance.
 
 # CO2 sensitivity experiments
 

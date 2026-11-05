@@ -1,0 +1,4 @@
+# Preserve distributed asset bytes across checkouts.
+*.npz -text
+*.ckpt -text
+assets/data/**/*.csv -text whitespace=cr-at-eol

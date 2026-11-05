@@ -1,0 +1,49 @@
+variable,unit
+Secondary Energy|Electricity|Wind,EJ/yr
+Secondary Energy|Electricity|Solar,EJ/yr
+Secondary Energy|Electricity|Oil,EJ/yr
+Secondary Energy|Electricity|Nuclear,EJ/yr
+Secondary Energy|Electricity|Hydro,EJ/yr
+Secondary Energy|Electricity|Geothermal,EJ/yr
+Secondary Energy|Electricity|Gas,EJ/yr
+Secondary Energy|Electricity|Coal,EJ/yr
+Secondary Energy|Electricity|Biomass,EJ/yr
+Secondary Energy|Electricity,EJ/yr
+Primary Energy|Wind,EJ/yr
+Primary Energy|Solar,EJ/yr
+Primary Energy|Oil,EJ/yr
+Primary Energy|Nuclear,EJ/yr
+Primary Energy|Hydro,EJ/yr
+Primary Energy|Geothermal,EJ/yr
+Primary Energy|Gas,EJ/yr
+Primary Energy|Coal,EJ/yr
+Primary Energy|Biomass,EJ/yr
+Primary Energy,EJ/yr
+Final Energy|Transportation|Liquids|Oil,EJ/yr
+Final Energy|Transportation|Hydrogen,EJ/yr
+Final Energy|Transportation|Gases,EJ/yr
+Final Energy|Transportation|Electricity,EJ/yr
+Final Energy|Transportation,EJ/yr
+Final Energy|Residential and Commercial|Solids,EJ/yr
+Final Energy|Residential and Commercial|Liquids,EJ/yr
+Final Energy|Residential and Commercial|Gases,EJ/yr
+Final Energy|Residential and Commercial|Electricity,EJ/yr
+Final Energy|Residential and Commercial,EJ/yr
+Final Energy|Industry|Solids,EJ/yr
+Final Energy|Industry|Liquids,EJ/yr
+Final Energy|Industry|Hydrogen,EJ/yr
+Final Energy|Industry|Gases,EJ/yr
+Final Energy|Industry|Electricity,EJ/yr
+Final Energy|Industry,EJ/yr
+Emissions|CO2|Other,Mt CO2/yr
+Emissions|CO2|Energy|Supply|Electricity,Mt CO2/yr
+Emissions|CO2|Energy|Demand|Transportation,Mt CO2/yr
+Emissions|CO2|Energy|Demand|Residential and Commercial,Mt CO2/yr
+Emissions|CO2|Energy|Demand|Industry,Mt CO2/yr
+Emissions|CO2|Energy and Industrial Processes,Mt CO2/yr
+Emissions|CO2|AFOLU,Mt CO2/yr
+Emissions|CO2,Mt CO2/yr
+Carbon Sequestration|CCS|Fossil,Mt CO2/yr
+Carbon Sequestration|CCS|Biomass,Mt CO2/yr
+Carbon Sequestration|CCS|Industrial Processes,Mt CO2/yr
+Carbon Sequestration|CCS,Mt CO2/yr

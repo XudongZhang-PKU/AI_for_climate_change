@@ -1,0 +1,83 @@
+{
+  "reference": {
+    "display_name": "Reference configuration",
+    "parameter": "reference",
+    "setting": "reference",
+    "sample_steps": 45,
+    "beta_end": 0.1,
+    "soft_eta_max": 0.001,
+    "reverse_projection_scale": 2.0
+  },
+  "beta_0p05": {
+    "display_name": "Terminal diffusion noise 0.05",
+    "parameter": "beta_end",
+    "setting": "0.05",
+    "sample_steps": 45,
+    "beta_end": 0.05,
+    "soft_eta_max": 0.001,
+    "reverse_projection_scale": 2.0
+  },
+  "beta_0p2": {
+    "display_name": "Terminal diffusion noise 0.20",
+    "parameter": "beta_end",
+    "setting": "0.20",
+    "sample_steps": 45,
+    "beta_end": 0.2,
+    "soft_eta_max": 0.001,
+    "reverse_projection_scale": 2.0
+  },
+  "softeta_0p0005": {
+    "display_name": "Maximum soft guidance 0.00050",
+    "parameter": "soft_eta_max",
+    "setting": "0.00050",
+    "sample_steps": 45,
+    "beta_end": 0.1,
+    "soft_eta_max": 0.0005,
+    "reverse_projection_scale": 2.0
+  },
+  "softeta_0p002": {
+    "display_name": "Maximum soft guidance 0.00200",
+    "parameter": "soft_eta_max",
+    "setting": "0.00200",
+    "sample_steps": 45,
+    "beta_end": 0.1,
+    "soft_eta_max": 0.002,
+    "reverse_projection_scale": 2.0
+  },
+  "proj_1p0": {
+    "display_name": "Terminal projection scale 1.0",
+    "parameter": "reverse_projection_scale",
+    "setting": "1.0",
+    "sample_steps": 45,
+    "beta_end": 0.1,
+    "soft_eta_max": 0.001,
+    "reverse_projection_scale": 1.0
+  },
+  "proj_3p0": {
+    "display_name": "Terminal projection scale 3.0",
+    "parameter": "reverse_projection_scale",
+    "setting": "3.0",
+    "sample_steps": 45,
+    "beta_end": 0.1,
+    "soft_eta_max": 0.001,
+    "reverse_projection_scale": 3.0
+  },
+  "steps_75": {
+    "display_name": "Reverse updates 75",
+    "parameter": "sample_steps",
+    "setting": "75",
+    "sample_steps": 75,
+    "beta_end": 0.1,
+    "soft_eta_max": 0.001,
+    "reverse_projection_scale": 2.0
+  },
+  "steps_100": {
+    "display_name": "Reverse updates 100",
+    "parameter": "sample_steps",
+    "setting": "100",
+    "sample_steps": 100,
+    "beta_end": 0.1,
+    "soft_eta_max": 0.001,
+    "reverse_projection_scale": 2.0
+  }
+}

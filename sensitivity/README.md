@@ -1,3 +1,5 @@
+> 历史集群作业配置。当前固定权重评估入口见 ../docs/reproduction_zh.md；原始集群路径仅供溯源。
+
 # CO2 sensitivity experiments
 
 First round: data scaling sensitivity for the paper.

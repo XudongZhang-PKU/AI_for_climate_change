@@ -16,6 +16,17 @@ from model_files.dataset import CleanDataset, SPMDataset, oversample_by_multipli
 from model_files.spm_diff.model import DiffSPM
 import pandas as pd
 import shutil
+from pathlib import Path
+
+
+def parse_bool(value):
+    if isinstance(value, bool):
+        return value
+    if value.lower() in ('true', '1', 'yes'):
+        return True
+    if value.lower() in ('false', '0', 'no'):
+        return False
+    raise argparse.ArgumentTypeError('Expected true/false or 1/0')
 def setup_seed(seed: int):
     """设置随机种子，保证实验可重复。"""
     import random
@@ -41,7 +52,17 @@ class LocalIndexDataset(torch.utils.data.Dataset):
         label, _ = self.base_dataset[source_index]
         return label, local_index
 
-def get_params():
+
+def build_export_loader(dataset, mask, batch_size, pin_memory=False):
+    """Keep export row indices aligned with the supplied pre-augmentation mask."""
+    if len(dataset) != len(mask):
+        raise ValueError('Export dataset and mask must have the same number of rows')
+    return torch.utils.data.DataLoader(
+        LocalIndexDataset(dataset), batch_size=batch_size, shuffle=False,
+        pin_memory=pin_memory,
+    )
+
+def get_params(argv=None):
     parser = argparse.ArgumentParser(description='pass')
 
     # model
@@ -58,12 +79,16 @@ def get_params():
     # train
     parser.add_argument("--train_fraction", type=float, default=1.0,
                         help="Fraction of the training split retained before oversampling.")
-    parser.add_argument("--is_train", type=bool, default=True) # train or evaluate
-    parser.add_argument("--is_val", type=bool, default=True)
-    parser.add_argument("--is_test", type=bool, default=False)
-    parser.add_argument("--is_gen", type=bool, default=False)
+    parser.add_argument("--is_train", type=parse_bool, default=True) # train or evaluate
+    parser.add_argument("--is_val", type=parse_bool, default=True)
+    parser.add_argument("--is_test", type=parse_bool, default=False)
+    parser.add_argument("--is_gen", type=parse_bool, default=False)
 
-    parser.add_argument("--nni", type=bool, default=False)
+    parser.add_argument("--nni", type=parse_bool, default=False)
+    parser.add_argument("--data-root", dest="data_root", default=None,
+                        help="SPM directory containing spm.npz and encoding tables")
+    parser.add_argument("--output-dir", dest="output_dir", default=None)
+    parser.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda"])
     parser.add_argument("--lr", type=float, default=0.00005)
     parser.add_argument("--train_batch_size", type=int, default=32)
     parser.add_argument("--gen_batch_size", type=int, default=32)
@@ -90,6 +115,7 @@ def get_params():
     parser.add_argument("--constraint_warmup_steps", type=int, default=50)
 
     # ==== nonneg & projection (post-process) ====
+    parser.add_argument("--use_hard_projection", type=int, default=1)  # 1=on, 0=off
     parser.add_argument("--reverse_projection_scale", type=float, default=2)
 
 
@@ -119,17 +145,18 @@ def get_params():
     parser.add_argument("--tiny_n_resolutions", type=int, default=2)
     parser.add_argument("--tiny_num_heads", type=int, default=1)
 
-    args, _ = parser.parse_known_args()
+    args, _ = parser.parse_known_args(argv)
     return args
 
 
 
-def default_config(data='SPM'):
+def default_config(data='SPM', data_root=None, output_root=None, device='auto'):
     work_path =  get_workspace()
     config = edict()
-    config.PATH_MOD = work_path + '/output/model/'
-    config.PATH_LOG = work_path + '/output/log/'
-    config.PATH_FORECAST = work_path + '/output/forecast/'
+    output_root = str(Path(output_root).resolve()) if output_root else work_path + '/output'
+    config.PATH_MOD = output_root + '/model/'
+    config.PATH_LOG = output_root + '/log/'
+    config.PATH_FORECAST = output_root + '/forecast/'
 
     # Data Config
     config.data = edict()
@@ -142,10 +169,20 @@ def default_config(data='SPM'):
     
     config.variable_baseline = config.data.path + config.data.name + "/variable_baseline.csv"
     config.region_baseline = config.data.path + config.data.name + "/region_baseline.csv"
+
+    if data_root:
+        spm_root = Path(data_root).resolve()
+        config.data.feature_file = str(spm_root / 'spm.npz')
+        config.data.var_encoding = str(spm_root / '变量编码对应表/dim_Variable_encoding.csv')
+        config.data.region_encoding = str(spm_root / '变量编码对应表/dim_Region_encoding.csv')
+        config.variable_baseline = str(spm_root / 'variable_baseline.csv')
+        config.region_baseline = str(spm_root / 'region_baseline.csv')
     
     config.region_map = pd.read_csv(config.data.region_encoding)
     config.var_map = pd.read_csv(config.data.var_encoding)
-    if torch.cuda.is_available():
+    if device == 'cuda' and not torch.cuda.is_available():
+        raise RuntimeError('CUDA was requested but is not available')
+    if device != 'cpu' and torch.cuda.is_available():
         torch.cuda.set_device("cuda:0")
         device = torch.device("cuda:0")
     else:
@@ -180,9 +217,14 @@ def default_config(data='SPM'):
 
 
 def main(params: dict):
+    if not params.get('is_train', True):
+        raise ValueError('Use scripts/run_model.py demo for checkpoint-only inference; this entrypoint trains.')
     setup_seed(params.get("seed", 42))
     torch.set_num_threads(2)
-    config = default_config()
+    config = default_config(data_root=params.get('data_root'),
+                            output_root=params.get('output_dir'),
+                            device=params.get('device', 'auto'))
+    config.save_inverse_npy = False
 
     config.is_test = params['is_test']
     config.is_val = params['is_val']
@@ -225,6 +267,7 @@ def main(params: dict):
     config.model.constraint_warmup_steps  = params['constraint_warmup_steps']
 
     # ---- post-process ----
+    config.model.use_hard_projection = bool(params['use_hard_projection'])
     config.model.reverse_projection_scale = params['reverse_projection_scale']
 
     # ---- results io ----
@@ -263,11 +306,17 @@ def main(params: dict):
         ablation_parts.append("NoVarCond")
     if config.model.enable_constraint_loss:
         ablation_parts.append("ConstraintLoss")
+    if not config.model.use_soft_guidance:
+        ablation_parts.append("NoSoftGuidance")
+    if not config.model.use_hard_projection:
+        ablation_parts.append("NoHardProjection")
     config.ablation = "_".join(ablation_parts)
 
     # 按 ablation 标签、split_seed 与实验后缀区分目录；训练记录 CSV 放入该目录并改名
     suffix = f"_{config.save_suffix}" if config.save_suffix else ""
     config.save_dir = f"fig2_data_prepare_{config.ablation}_{config.split_seed}{suffix}"
+    if params.get('output_dir'):
+        config.save_dir = str(Path(params['output_dir']).resolve())
     config.results_csv = os.path.join(config.save_dir, "训练记录.csv")
 
     # Keep Slurm experiment logs on a short stable path; full hyperparameters are recorded in results_csv.
@@ -299,7 +348,9 @@ def main(params: dict):
         f"no_region={int(config.model.ablation_no_region_cond)} "
         f"no_var={int(config.model.ablation_no_var_cond)} "
         f"enable_constraint_loss={int(config.model.enable_constraint_loss)} "
-        f"constraint_weight={config.model.constraint_weight}\n",
+        f"constraint_weight={config.model.constraint_weight} "
+        f"use_soft_guidance={int(config.model.use_soft_guidance)} "
+        f"use_hard_projection={int(config.model.use_hard_projection)}\n",
         is_terminal=True,
     )
 
@@ -426,7 +477,11 @@ def main(params: dict):
             except OSError:
                 pass
         ckpt_path = os.path.join(save_dir, f"epoch_{epoch}_loss{avg_loss:.6f}.ckpt")
-        torch.save({"model_state": model.state_dict(), "epoch": epoch}, ckpt_path)
+        torch.save({"model_state": model.state_dict(), "epoch": epoch,
+                    "seed": config.seed, "split_seed": config.split_seed,
+                    "parameters": params}, ckpt_path)
+        if epoch == 290:
+            shutil.copyfile(ckpt_path, os.path.join(save_dir, "report_epoch_290.ckpt"))
 
 
         # ====== GEN（全样本）评估：与 val/test 并列的独立分支 ======
@@ -561,11 +616,24 @@ def main(params: dict):
         #     )
 # ====== 训练结束后：可选导出 Fig.2 绘图数据（--export_fig2 1 时执行） ======
     if getattr(config, 'export_fig2', 0) and not config.is_gen and len(test_dataset) > 0:
+        if best_ckpt is None:
+            config.logger.write(
+                "[export_fig2] skipped: no validation-selected checkpoint was produced. "
+                "Validation starts after epoch 200; the final epoch checkpoint remains saved.\n",
+                is_terminal=True,
+            )
+            return
         sd = torch.load(os.path.join(save_dir, "best.ckpt"), map_location=config.device)
         model.load_state_dict(sd.get('model_state', sd), strict=False)
         from utils.export_fig2 import run_export
+        # The training loader has a second model/category oversampling pass.
+        # Export the pre-pass dataset so indices address train_mask correctly.
+        export_train_loader = build_export_loader(
+            orig_train_ds, train_mask, config.train_batch_size,
+            pin_memory=config.device.type == 'cuda',
+        )
         fig2_dir = run_export(
-            model, test_loader, train_loader, test_mask, train_mask,
+            model, test_loader, export_train_loader, test_mask, train_mask,
             config, clean_norm_data, means_t, stds_t,
             out_dir=os.path.join(save_dir, "fig2_data"),
             n_samples_fig2=config.n_samples, verbose=True,
@@ -621,15 +689,13 @@ def main(params: dict):
 
 
 if __name__ == '__main__':
-    print('GPU:', torch.cuda.current_device())
+    print('Device:', 'cuda' if torch.cuda.is_available() else 'cpu')
     params = vars(get_params())
-    try:
+    if params['nni']:
         import nni
         import logging
         logger = logging.getLogger('training')
         tuner_params = nni.get_next_parameter()
         logger.debug(tuner_params)
         params.update(tuner_params)
-    except Exception:
-        pass  # 非 NNI 环境：直接用命令行参数
     main(params)

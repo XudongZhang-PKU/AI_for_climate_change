@@ -68,6 +68,7 @@ class DiffSPM(nn.Module):
 
         # guidance during sampling
         self.use_soft_guidance = config.get('use_soft_guidance', True)
+        self.use_hard_projection = bool(config.get('use_hard_projection', True))
         self.soft_guidance_schedule = config.get('soft_guidance_schedule', 'exp')
         #软约束引导的上下限
         self.soft_eta_min = config.get('soft_eta_min', 0)
@@ -571,7 +572,8 @@ class DiffSPM(nn.Module):
         xs, x0_preds = self.generalized_steps_ddim(x, seq, eta=1.0, label=label)
 
         # === 最终收口：输出物理空间 ===
-        if getattr(self, "ablation_no_constraint", False):
+        if (getattr(self, "ablation_no_constraint", False)
+                or not getattr(self, "use_hard_projection", True)):
             x_full = label.clone()
             x_full[:, :, :, self.value_index] = xs[-1].squeeze(-1)
             if hasattr(self, "denorm_fn") and self.denorm_fn is not None:

@@ -1,0 +1,110 @@
+{
+  "full": {
+    "display_name": "Full model (ours)",
+    "checkpoint": "fig2_data_prepare_Full_2026_ab2026_full/report_epoch_290.ckpt",
+    "ablation": "Full",
+    "denoiser": "UGnet",
+    "no_category_condition": false,
+    "no_region_condition": false,
+    "no_variable_condition": false,
+    "constraint_loss": false,
+    "soft_guidance": true,
+    "hard_projection": true
+  },
+  "no_physics": {
+    "display_name": "Without physics constraints",
+    "checkpoint": "fig2_data_prepare_NoConstraint_NoSoftGuidance_NoHardProjection_2026_ab2026_no_physics/report_epoch_290.ckpt",
+    "ablation": "NoConstraint",
+    "denoiser": "UGnet",
+    "no_category_condition": false,
+    "no_region_condition": false,
+    "no_variable_condition": false,
+    "constraint_loss": false,
+    "soft_guidance": false,
+    "hard_projection": false
+  },
+  "constraint_loss_only": {
+    "display_name": "With constraint loss",
+    "checkpoint": "fig2_data_prepare_Full_ConstraintLoss_NoSoftGuidance_NoHardProjection_2026_ab2026_constraint_loss_only/report_epoch_290.ckpt",
+    "ablation": "Full",
+    "denoiser": "UGnet",
+    "no_category_condition": false,
+    "no_region_condition": false,
+    "no_variable_condition": false,
+    "constraint_loss": true,
+    "soft_guidance": false,
+    "hard_projection": false
+  },
+  "tiny_ustgnet": {
+    "display_name": "TinyUSTGnet",
+    "checkpoint": "fig2_data_prepare_Full_TinyUGnet_2026_ab2026_tiny_ustgnet/report_epoch_290.ckpt",
+    "ablation": "Full",
+    "denoiser": "TinyUGnet",
+    "no_category_condition": false,
+    "no_region_condition": false,
+    "no_variable_condition": false,
+    "constraint_loss": false,
+    "soft_guidance": true,
+    "hard_projection": true
+  },
+  "no_temporal_convolution": {
+    "display_name": "Without temporal convolution",
+    "checkpoint": "fig2_data_prepare_Full_UGnetNoTCN_2026_ab2026_no_temporal_convolution/report_epoch_290.ckpt",
+    "ablation": "Full",
+    "denoiser": "UGnetNoTCN",
+    "no_category_condition": false,
+    "no_region_condition": false,
+    "no_variable_condition": false,
+    "constraint_loss": false,
+    "soft_guidance": true,
+    "hard_projection": true
+  },
+  "no_graph": {
+    "display_name": "Without graph module",
+    "checkpoint": "fig2_data_prepare_NoGraph_2026_ab2026_no_graph/report_epoch_290.ckpt",
+    "ablation": "NoGraph",
+    "denoiser": "UGnet",
+    "no_category_condition": false,
+    "no_region_condition": false,
+    "no_variable_condition": false,
+    "constraint_loss": false,
+    "soft_guidance": true,
+    "hard_projection": true
+  },
+  "no_category_condition": {
+    "display_name": "Without category condition",
+    "checkpoint": "fig2_data_prepare_Full_NoCatCond_2026_ab2026_no_category_condition/report_epoch_290.ckpt",
+    "ablation": "Full",
+    "denoiser": "UGnet",
+    "no_category_condition": true,
+    "no_region_condition": false,
+    "no_variable_condition": false,
+    "constraint_loss": false,
+    "soft_guidance": true,
+    "hard_projection": true
+  },
+  "no_region_condition": {
+    "display_name": "Without region condition",
+    "checkpoint": "fig2_data_prepare_Full_NoRegionCond_2026_ab2026_no_region_condition/report_epoch_290.ckpt",
+    "ablation": "Full",
+    "denoiser": "UGnet",
+    "no_category_condition": false,
+    "no_region_condition": true,
+    "no_variable_condition": false,
+    "constraint_loss": false,
+    "soft_guidance": true,
+    "hard_projection": true
+  },
+  "no_variable_condition": {
+    "display_name": "Without variable condition",
+    "checkpoint": "fig2_data_prepare_Full_NoVarCond_2026_ab2026_no_variable_condition/report_epoch_290.ckpt",
+    "ablation": "Full",
+    "denoiser": "UGnet",
+    "no_category_condition": false,
+    "no_region_condition": false,
+    "no_variable_condition": true,
+    "constraint_loss": false,
+    "soft_guidance": true,
+    "hard_projection": true
+  }
+}

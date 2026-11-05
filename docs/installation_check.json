@@ -1,8 +1,0 @@
-{
-  "python": "3.14.2",
-  "platform": "macOS-15.5-arm64-arm-64bit-Mach-O",
-  "seconds": 23.41,
-  "exit_code": 0,
-  "wheel_cache": "warm cache; network metadata may still be requested",
-  "method": "new isolated virtualenv; pip install -r requirements-lock.txt"
-}

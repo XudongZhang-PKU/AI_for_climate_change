@@ -29,7 +29,7 @@ from scripts.run_model import checkpoint_provenance, sha256
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data-root", default=str(PROJECT_ROOT / "assets/data/SPM"))
+    parser.add_argument("--data-root", required=True)
     parser.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda"])
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--output-dir", required=True)

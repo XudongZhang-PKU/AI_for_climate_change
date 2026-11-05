@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Portable entrypoints for a checkpoint-based demonstration and full training.
+"""Portable entrypoints for checkpoint sampling and full training.
 
-The bundled checkpoint is a historical split-1234 model. The demo exercises the
-real model and processed data; it does not reproduce the submitted split-2026
-results. No training is performed by the ``demo`` command.
+Supply processed data and a compatible checkpoint explicitly. The ``demo``
+command samples held-out inputs without training or modifying the checkpoint.
 """
 from __future__ import annotations
 
@@ -17,7 +16,6 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEMO_SHA256 = "459c0b01e662750a5d25dbc236fd71a53a275436ac67dab36c67c139b35deb7f"
 
 
 def positive_int(value):
@@ -40,11 +38,6 @@ def checkpoint_provenance(state, digest, args, require_normalization_seed=True):
     metadata = state.get("parameters", {}) if isinstance(state, dict) else {}
     recorded_split = state.get("split_seed", metadata.get("split_seed"))
     recorded_seed = state.get("seed", metadata.get("seed"))
-    if digest == DEMO_SHA256:
-        # The original checkpoint does not store its training RNG seed. Only
-        # its split is established by its source directory; callers that refit
-        # normalization must provide the documented seed explicitly.
-        recorded_split = 1234
     if recorded_split is not None and args.checkpoint_split_seed is not None:
         if int(recorded_split) != args.checkpoint_split_seed:
             raise ValueError("--checkpoint-split-seed disagrees with checkpoint metadata")
@@ -68,20 +61,19 @@ def parse_args(argv=None):
     commands = parser.add_subparsers(dest="command", required=True)
     for name in ("demo", "train"):
         sub = commands.add_parser(name)
-        sub.add_argument("--data-root", type=Path, default=ROOT / "assets/data/SPM")
+        sub.add_argument("--data-root", type=Path, required=True)
         sub.add_argument("--device", choices=("cpu", "cuda", "auto"), default="cpu" if name == "demo" else "auto")
         sub.add_argument("--output-dir", type=Path, default=ROOT / f"outputs/{name}")
-        sub.add_argument("--seed", type=int, default=1234 if name == "demo" else 2026)
-        sub.add_argument("--split-seed", type=int, default=1234 if name == "demo" else 2026)
+        sub.add_argument("--seed", type=int, default=2026)
+        sub.add_argument("--split-seed", type=int, default=2026)
         if name == "demo":
-            sub.add_argument("--checkpoint", type=Path,
-                             default=ROOT / "assets/checkpoints/demo_split1234_epoch280.ckpt")
+            sub.add_argument("--checkpoint", type=Path, required=True)
             sub.add_argument("--checkpoint-split-seed", type=int,
                              help="Documented split seed for external legacy checkpoints without metadata")
             sub.add_argument("--normalization-seed", type=int,
                              help="Seed for training-category resampling; original training seed when documented")
             sub.add_argument("--normalization-file", type=Path,
-                             help="Saved keys/train_means/train_stds; bundled demo uses its matching saved statistics")
+                             help="Saved keys/train_means/train_stds matching the supplied checkpoint")
             sub.add_argument("--parents", type=positive_int, default=1)
             sub.add_argument("--n-samples", type=positive_int, default=2)
             sub.add_argument("--threads", type=positive_int, default=2)
@@ -209,8 +201,6 @@ def run_demo(args):
     digest = sha256(args.checkpoint)
     state = torch.load(args.checkpoint, map_location="cpu", weights_only=True)
     normalization_file = args.normalization_file
-    if digest == DEMO_SHA256 and normalization_file is None:
-        normalization_file = ROOT / "assets/data/SPM/demo_normalization.npz"
     if normalization_file and not normalization_file.is_file():
         raise FileNotFoundError(f"Saved normalization file is missing: {normalization_file}")
     split_seed, normalization_seed = checkpoint_provenance(
@@ -258,12 +248,12 @@ def run_demo(args):
     np.savez_compressed(args.output_dir / "normalization.npz",
                         means=np.asarray(means), stds=np.asarray(stds), available=coverage)
     manifest = {
-        "purpose": "model demonstration; not reproduction of the submitted split-2026 results",
+        "purpose": "checkpoint sampling",
         "checkpoint": str(args.checkpoint), "checkpoint_sha256": digest,
         "checkpoint_epoch": state.get("epoch"), "split_seed": split_seed,
         "original_training_seed": state.get("seed", state.get("parameters", {}).get("seed")),
         "normalization_provenance": (
-            "saved training statistics from the checkpoint's historical export; no fitting during demo"
+            "supplied saved training statistics; no fitting during sampling"
             if normalization_file else "reconstructed using the checkpoint's documented training seed"
         ),
         "normalization_file": str(normalization_file) if normalization_file else None,

@@ -20,9 +20,9 @@ class ReviewCLIProvenanceTests(unittest.TestCase):
         values.update(overrides)
         return SimpleNamespace(**values)
 
-    def test_bundled_demo_cannot_be_labelled_as_submission_split(self):
+    def test_checkpoint_split_cannot_be_mislabelled(self):
         with self.assertRaisesRegex(ValueError, "Checkpoint split is 1234"):
-            cli.checkpoint_provenance({"epoch": 280}, cli.DEMO_SHA256, self.args(split_seed=2026))
+            cli.checkpoint_provenance({"split_seed": 1234}, "external", self.args(split_seed=2026))
 
     def test_legacy_external_checkpoint_requires_provenance(self):
         with self.assertRaisesRegex(ValueError, "no split metadata"):
@@ -30,11 +30,11 @@ class ReviewCLIProvenanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "no training seed"):
             cli.checkpoint_provenance({"epoch": 290}, "unknown", self.args(checkpoint_split_seed=1234))
 
-    def test_known_demo_checkpoint_has_no_implicit_training_seed(self):
+    def test_checkpoint_has_no_implicit_training_seed(self):
         with self.assertRaisesRegex(ValueError, "no training seed"):
-            cli.checkpoint_provenance({"epoch": 280}, cli.DEMO_SHA256, self.args())
+            cli.checkpoint_provenance({"split_seed": 1234}, "external", self.args())
         self.assertEqual(
-            cli.checkpoint_provenance({"epoch": 280}, cli.DEMO_SHA256, self.args(),
+            cli.checkpoint_provenance({"split_seed": 1234}, "external", self.args(),
                                      require_normalization_seed=False),
             (1234, None),
         )

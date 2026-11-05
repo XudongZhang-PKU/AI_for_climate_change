@@ -49,14 +49,13 @@ data
 # Local scratch notebooks
 *.ipynb
 
-# Curated reproducibility assets are deliberately versioned.
-!assets/data/
-!assets/data/**
-!assets/data/SPM/spm.npz
-!assets/checkpoints/*.ckpt
-!preprocessing/prepare_spm.ipynb
+# Local inputs, model weights and generated examples
+assets/
+examples/
+reference_results/
 results/
+outputs/
 .verify-venv/
 
-outputs/
-!examples/expected_demo/*.npz
+# Source preprocessing notebook
+!preprocessing/prepare_spm.ipynb

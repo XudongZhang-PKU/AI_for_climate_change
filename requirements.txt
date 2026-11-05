@@ -1,5 +1,4 @@
-# CPU demo environment tested on macOS with Python 3.14.2.
-# For the original CUDA training environment, see docs/environment_zh.md.
+# Python dependencies for training, inference and evaluation.
 numpy==2.4.4
 pandas==3.0.3
 scipy==1.17.1
